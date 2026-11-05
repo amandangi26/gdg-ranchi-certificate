@@ -2,12 +2,19 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    // Check if the path starts with /admin
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    const { pathname } = request.nextUrl;
+
+    // Block/redirect legacy /login route directly to homepage
+    if (pathname === '/login') {
+        return NextResponse.redirect(new URL('/', request.url));
+    }
+
+    // Protect /admin routes, redirect unauthorized requests to /gdgr
+    if (pathname.startsWith('/admin')) {
         const adminSession = request.cookies.get('admin_session');
 
-        if (!adminSession) {
-            return NextResponse.redirect(new URL('/login', request.url));
+        if (!adminSession || adminSession.value !== 'true') {
+            return NextResponse.redirect(new URL('/gdgr', request.url));
         }
     }
 
@@ -15,5 +22,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/admin/:path*',
+    matcher: ['/admin/:path*', '/login'],
 };

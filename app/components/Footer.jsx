@@ -1,9 +1,8 @@
 'use client'
 
 import { memo } from 'react'
-import { Mail, ArrowRight, Ticket } from 'lucide-react'
+import { Mail, ArrowRight, Users, ExternalLink, Award } from 'lucide-react'
 import Link from 'next/link'
-
 
 function InstagramIcon({ size = 16 }) {
   return (
@@ -96,16 +95,17 @@ const SOCIALS = [
 ]
 
 const MAIN_SITE_URL = process.env.NEXT_PUBLIC_MAIN_WEBSITE_URL || 'https://devfest.gdgranchi.in'
+const COMMUNITY_URL = 'https://gdg.community.dev/gdg-ranchi/'
 
 const PORTAL_LINKS = [
   { label: 'Download Certificate', href: '/' },
-  // { label: 'Admin Sign In', href: '/login' },
-  { label: 'Help', href: 'mailto:gdgranchi@gmail.com', external: true },
+  { label: 'Verify Credential', href: '/' },
+  { label: 'Support & Queries', href: 'mailto:gdgranchi@gmail.com', external: true },
 ]
 
 const MAIN_SITE_LINKS = [
-  { label: 'Switch to DevFest Main Site', href: MAIN_SITE_URL, external: true, highlight: true },
-  { label: 'Event Registration / Tickets', href: 'https://gdg.community.dev/events/details/google-gdg-ranchi-presents-devfest-2026/', external: true },
+  { label: 'DevFest Main Website', href: MAIN_SITE_URL, external: true, highlight: true },
+  { label: 'GDG Ranchi Chapter', href: COMMUNITY_URL, external: true },
   { label: 'Community Guidelines', href: 'https://developers.google.com/community-guidelines', external: true },
 ]
 
@@ -122,7 +122,7 @@ function Footer() {
       <div className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 rounded-full bg-gdgGreen/10 blur-[100px]" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-gdgYellow/5 blur-[100px]" />
 
-      <div className="max-w-[1280px] mx-auto px-4   md:px-8 pt-10 pb-8">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8 pt-10 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_0.9fr_0.9fr_1.3fr] gap-8 xl:gap-10">
           {/* Column 1: Brand & Community Identity */}
           <div className="space-y-4">
@@ -247,10 +247,11 @@ function Footer() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-2 transition-all group w-fit ${item.highlight
-                      ? 'text-gdgYellow font-black hover:text-white underline decoration-2 underline-offset-4'
-                      : 'text-white/75 hover:text-white font-medium'
-                      }`}
+                    className={`flex items-center gap-2 transition-all group w-fit ${
+                      item.highlight
+                        ? 'text-gdgYellow font-black hover:text-white underline decoration-2 underline-offset-4'
+                        : 'text-white/75 hover:text-white font-medium'
+                    }`}
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-gdgBlue opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
                     <span className="group-hover:translate-x-0.5 transition-transform">
@@ -262,32 +263,30 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Event Registration Callout Card */}
+          {/* Column 4: Event Concluded Callout Card */}
           <div className="bg-white/5 border-2 border-black/60 rounded-2xl p-5 shadow-[4px_4px_0_0_#000] flex flex-col justify-between space-y-4">
             <div className="space-y-2.5">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gdgGreen/20 border border-gdgGreen/40 text-[10px] font-black text-gdgGreen uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-gdgGreen animate-pulse" />
-                Get Tickets
+                <span className="w-1.5 h-1.5 rounded-full bg-gdgGreen" />
+                Event Concluded
               </div>
               <h4 className="font-black text-base text-white tracking-tight leading-snug">
-                Join DevFest Ranchi 2026
+                Thank You For Joining Us!
               </h4>
               <p className="text-xs text-white/65 leading-relaxed">
-                October 31, 2026 • Ranchi, Jharkhand. Grab your tickets and secure your spot today.
+                DevFest Ranchi 2026 has concluded with 500+ attendees. Stay connected with the chapter for future meetups and hackathons.
               </p>
             </div>
 
             <a
-              href="https://gdg.community.dev/events/details/google-gdg-ranchi-presents-devfest-2026/"
+              href={COMMUNITY_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black font-black text-xs uppercase tracking-wider border-2 border-white/20 hover:border-black shadow-[3px_3px_0_0_#000] hover:-translate-y-0.5 active:translate-y-0.5 transition-all select-none"
             >
-              <Ticket size={14} className="text-gdgYellow" />
-              <span>Get Tickets</span>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-gdgYellow text-black px-2 py-0.5 rounded-full border border-black shadow-[1px_1px_0_0_#000] ml-1">
-                Live
-              </span>
+              <Users size={14} className="text-gdgYellow" />
+              <span>Join GDG Community</span>
+              <ExternalLink size={12} className="ml-0.5" />
             </a>
           </div>
         </div>

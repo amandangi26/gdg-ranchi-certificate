@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import * as XLSX from 'xlsx';
 import { invalidateTemplateCache } from '@/lib/template-cache';
+import { saveTrackMapping, normalizeTrackName, getTrackCode } from '@/lib/tracks';
 import { cookies } from 'next/headers';
 
 async function isAuthenticated() {
@@ -18,14 +19,17 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
     const template = formData.get('template') as File | null;
+    const track = formData.get('track') as string | null;
+    const templateTarget = formData.get('templateTarget') as string | null; // 'global' | 'conference' | 'beginner' | 'flagship'
 
     if (!file && !template) {
       return NextResponse.json({ error: 'No files received.' }, { status: 400 });
     }
 
     let message = '';
+    const selectedTrack = normalizeTrackName(track || 'CONFERENCE TRACK');
 
-    // 1. Process Excel / CSV Attendees File
+    // 1. Process Excel / CSV Attendees File with Track Association
     if (file) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
@@ -36,6 +40,7 @@ export async function POST(req: NextRequest) {
 
       // In-memory map to deduplicate records in the spreadsheet
       const attendeeMap = new Map<string, string>(); // ticketId -> formattedName
+      const trackMap: Record<string, string> = {};
 
       for (let i = 0; i < data.length; i++) {
         const row = data[i];
@@ -52,8 +57,10 @@ export async function POST(req: NextRequest) {
         if (
           lowerTicket.includes('ticket') ||
           lowerTicket.includes('order') ||
+          lowerTicket.includes('registration') ||
           lowerName === 'name' ||
-          lowerName === 'attendee name'
+          lowerName === 'attendee name' ||
+          lowerName === 'full name'
         ) {
           continue;
         }
@@ -69,6 +76,7 @@ export async function POST(req: NextRequest) {
 
         if (ticketId && formattedName) {
           attendeeMap.set(ticketId, formattedName);
+          trackMap[ticketId] = selectedTrack;
         }
       }
 
@@ -104,25 +112,42 @@ export async function POST(req: NextRequest) {
         processedCount += batch.length;
       }
 
-      message += `Successfully processed and synced ${processedCount} attendees. `;
+      // Persist track mappings safely into Config table (zero schema drift, production safe)
+      await saveTrackMapping(trackMap);
+
+      message += `Successfully synced ${processedCount} attendees for ${selectedTrack}. `;
     }
 
-    // 2. Process Certificate PDF Template
+    // 2. Process Certificate PDF Template Upload / Update
     if (template) {
       const bytes = await template.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const base64Template = buffer.toString('base64');
 
+      let configKey = 'template_data';
+      let targetLabel = 'Global / Default Template';
+
+      if (templateTarget === 'conference') {
+        configKey = 'template_data_conf';
+        targetLabel = 'Conference Track Template';
+      } else if (templateTarget === 'beginner') {
+        configKey = 'template_data_beg';
+        targetLabel = 'Beginner Track Template';
+      } else if (templateTarget === 'flagship') {
+        configKey = 'template_data_dev';
+        targetLabel = 'Flagship Dev Track Template';
+      }
+
       await prisma.config.upsert({
-        where: { key: 'template_data' },
+        where: { key: configKey },
         update: { value: base64Template },
-        create: { key: 'template_data', value: base64Template },
+        create: { key: configKey, value: base64Template },
       });
 
       // Invalidate memory cache so attendees immediately get the newly uploaded template
-      invalidateTemplateCache();
+      invalidateTemplateCache(configKey);
 
-      message += 'Template uploaded and cached successfully.';
+      message += `${targetLabel} uploaded and activated successfully.`;
     }
 
     return NextResponse.json({ message, success: true });

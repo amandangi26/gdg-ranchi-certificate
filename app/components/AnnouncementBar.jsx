@@ -1,17 +1,17 @@
 import { memo } from 'react'
 
 const ANNOUNCEMENTS = [
-  '🎟️ Tickets Are Now Live! ',
-  '🚀 DevFest Ranchi 2026 • Mark Your Calendars',
-  '🎟️ Tickets Are Now Live!',
-  '🔥 Stay Tuned & Connect With Us',
-  "✨ Jharkhand's Largest Developer Conference",
+  '🎉 DevFest Ranchi 2026 Successfully Concluded! Thank You Everyone!',
+  '📜 Official Certificates of Participation Are Now Live!',
+  '✨ 500+ Developers • 3 Tracks • Jharkhand’s Largest Tech Celebration',
+  '🚀 Enter Your Ticket Order ID Below to Download Your Credential',
+  '🔥 Stay Connected with GDG Ranchi for Upcoming Meetups & Hackathons',
 ]
 
 function AnnouncementBar() {
   return (
     <aside
-      aria-label="Ticket Announcement"
+      aria-label="Event Concluded Announcement"
       className="bg-gdgYellow text-black border-b-[2px] border-black overflow-hidden py-1.5 relative z-20 select-none shadow-[inset_0_-1px_0_rgba(0,0,0,0.1)]"
     >
       <div className="flex w-max animate-marquee">

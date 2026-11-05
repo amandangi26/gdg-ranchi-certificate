@@ -6,14 +6,14 @@ import {
   X,
   ExternalLink,
   Award,
-  ShieldCheck,
-  Ticket,
+  Users,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import AnnouncementBar from './AnnouncementBar'
 
 const MAIN_SITE_URL = process.env.NEXT_PUBLIC_MAIN_WEBSITE_URL || 'https://devfest.gdgranchi.in'
+const COMMUNITY_URL = 'https://gdg.community.dev/gdg-ranchi/'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -48,29 +48,12 @@ export default function Navbar() {
           {/* Neo-brutalist "Certificates" Tag */}
           <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-black bg-[#FBBC05] text-[#111] font-black text-[10px] uppercase tracking-wider shadow-[1.5px_1.5px_0_0_#000]">
             <Award className="w-3 h-3 stroke-[2.5]" />
-            <span>Certificates</span>
+            <span>Official Certificates</span>
           </span>
         </div>
 
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-2.5 lg:gap-3 text-sm">
-          {/* Active Certificates Pill */}
-          {/* <Link
-            href="/"
-            onClick={() => {
-              if (isHome) {
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }
-            }}
-            className="transition-all font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full flex items-center gap-1.5 select-none bg-black text-white border-2 border-black shadow-[2px_2px_0_0_#4285F4]"
-          >
-            <span className="w-2 h-2 rounded-full bg-[#34A853] animate-pulse" />
-            <span>Certificates</span>
-          </Link> */}
-
-          {/* Admin Portal Shortcut */}
-
-
           {/* Primary CTA: Switch to DevFest Main Site */}
           <a
             href={MAIN_SITE_URL}
@@ -78,19 +61,19 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FBBC05] hover:bg-[#F9AB00] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0_0_#000] hover:shadow-[1.5px_1.5px_0_0_#000] hover:translate-x-[1.5px] hover:translate-y-[1.5px] active:translate-y-[3px] active:shadow-none transition-all select-none cursor-pointer group"
           >
-            <span>Switch to DevFest Main Site</span>
+            <span>DevFest Main Website</span>
             <ExternalLink className="w-3.5 h-3.5 stroke-[2.5] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
 
-          {/* Get Tickets Link */}
+          {/* GDG Community Chapter Link */}
           <a
-            href="https://gdg.community.dev/events/details/google-gdg-ranchi-presents-devfest-2026/"
+            href={COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[2.5px_2.5px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-y-[2px] transition-all select-none"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[2.5px_2.5px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-y-[2px] transition-all select-none"
           >
-            <Ticket className="w-3.5 h-3.5" />
-            <span>Tickets</span>
+            <Users className="w-3.5 h-3.5" />
+            <span>Join Community</span>
           </a>
         </div>
 
@@ -109,10 +92,11 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle Button */}
           <button
-            className={`w-9 h-9 flex items-center justify-center rounded-full border-2 border-black transition-all cursor-pointer ${mobileOpen
-              ? 'bg-black text-white shadow-[2px_2px_0_0_#EA4335]'
-              : 'bg-white text-black shadow-[2px_2px_0_0_#000] hover:bg-[#FFFBF0] active:translate-y-0.5'
-              }`}
+            className={`w-9 h-9 flex items-center justify-center rounded-full border-2 border-black transition-all cursor-pointer ${
+              mobileOpen
+                ? 'bg-black text-white shadow-[2px_2px_0_0_#EA4335]'
+                : 'bg-white text-black shadow-[2px_2px_0_0_#000] hover:bg-[#FFFBF0] active:translate-y-0.5'
+            }`}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation menu"
           >
@@ -145,20 +129,7 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Admin Login Link */}
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="w-full flex items-center justify-between py-2.5 px-3.5 rounded-xl font-black text-xs uppercase tracking-wider border-2 border-black bg-white hover:bg-[#FFF8E7] text-black shadow-[2px_2px_0_0_#000] active:translate-y-0.5 select-none"
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#4285F4]" />
-                <span>Admin Sign In</span>
-              </div>
-              <span className="text-[10px] font-bold text-[#666]">Portal Login</span>
-            </Link>
-
-            {/* Prominent Button: Switch to DevFest Main Site */}
+            {/* Switch to DevFest Main Site */}
             <a
               href={MAIN_SITE_URL}
               target="_blank"
@@ -166,20 +137,20 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="w-full py-3 rounded-full bg-[#FBBC05] hover:bg-[#F9AB00] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[2.5px_2.5px_0_0_#000] flex items-center justify-center gap-2 select-none active:translate-y-0.5 transition-all"
             >
-              <span>Switch to DevFest Main Site</span>
+              <span>DevFest Main Website</span>
               <ExternalLink size={14} className="stroke-[2.5]" />
             </a>
 
-            {/* Get Tickets Button */}
+            {/* Join Community Button */}
             <a
-              href="https://gdg.community.dev/events/details/google-gdg-ranchi-presents-devfest-2026/"
+              href={COMMUNITY_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
               className="w-full py-2.5 rounded-full bg-[#4285F4] text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[2px_2px_0_0_#000] flex items-center justify-center gap-2 select-none active:translate-y-0.5 transition-all"
             >
-              <Ticket size={14} />
-              <span>Event Registration / Tickets</span>
+              <Users size={14} />
+              <span>Join GDG Ranchi Community</span>
             </a>
           </div>
         </div>
